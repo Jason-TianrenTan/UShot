@@ -12,18 +12,34 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/btn_select_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select from album"/>
 
         <Button
-            android:layout_marginTop="20dp"
+            android:id="@+id/btn_select_photo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/button_choose"
+            android:drawableStart="@drawable/ic_image_black_24dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="选一张"
+            android:textColor="#FFFFFF" />
+
+        <Button
             android:id="@+id/btn_take_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Take photo"/>
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/button_take"
+            android:drawableStart="@drawable/ic_camera_black_24dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="拍一张"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 
