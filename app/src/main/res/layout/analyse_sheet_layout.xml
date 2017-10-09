@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    tools:context="com.example.administrator.ushot.Modules.AnalyseActivity">
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.Toolbar
@@ -51,7 +50,7 @@
 
                 <com.github.mikephil.charting.charts.RadarChart
                     android:padding="5dp"
-                    android:id="@+id/activity_radar_chart"
+                    android:id="@+id/radar_chart"
                     android:layout_width="match_parent"
                     android:layout_height="400dp" />
             </android.support.v7.widget.CardView>
@@ -82,7 +81,7 @@
                         android:orientation="vertical">
 
                         <com.daimajia.numberprogressbar.NumberProgressBar
-                            android:id="@+id/activity_progbar_total"
+                            android:id="@+id/progbar_total"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
@@ -126,33 +125,24 @@
                         android:textSize="16dp"
                         android:layout_marginBottom="5dp"/>
 
-                    <devlight.io.library.ArcProgressStackView
-                        android:id="@+id/activity_progressstack_score"
-                        android:layout_width="match_parent"
-                        android:layout_height="280dp"
-                        android:layout_gravity="center"
-                        app:apsv_animated="true"
-                        app:apsv_animation_duration="1000"
-                        app:apsv_dragged="false"
-                        app:apsv_draw_width="75%"
-                        app:apsv_indicator_orientation="vertical"
-                        app:apsv_interpolator="@android:anim/bounce_interpolator"
-                        app:apsv_leveled="false"
-                        app:apsv_model_bg_enabled="true"
-                        app:apsv_model_offset="2dp"
-                        app:apsv_preview_bg="#ccc"
-                        app:apsv_preview_colors="@array/default_preview"
-                        app:apsv_rounded="false"
-                        app:apsv_shadow_angle="90"
-                        app:apsv_shadow_color="@color/gainsboro"
-                        app:apsv_shadow_distance="5dp"
-                        app:apsv_shadow_radius="3dp"
-                        app:apsv_shadowed="false"
-                        app:apsv_start_angle="270"
-                        app:apsv_sweep_angle="360"
-                        app:apsv_text_color="#fff" />
+
+
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/btn_moreinfo"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="详细分析结果"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/whitesmoke"
+                android:background="@drawable/button_bg"/>
 
             <View
                 android:id="@+id/anchor"
