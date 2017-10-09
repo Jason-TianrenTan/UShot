@@ -45,8 +45,6 @@ public class AnalyseActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.progbar_total)
     NumberProgressBar scoreBar;
-    @BindView(R.id.recyclerview_analyse)
-    RecyclerView recyclerviewAnalyse;
     @BindView(R.id.progressstack_score)
     ArcProgressStackView arcProgressStackView;
 
