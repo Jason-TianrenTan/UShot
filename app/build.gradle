@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.administrator.ushot"
-        minSdkVersion 25
+        minSdkVersion 22
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -30,7 +30,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/httpmime.jar')
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+    compile 'com.android.support:design:26.0.0-alpha1'
+    compile 'com.android.support:cardview-v7:26.0.0-alpha1'
+    compile 'com.android.support:support-v4:26.0.0-alpha1'
+    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'com.zhihu.android:matisse:0.4.3'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:8.8.1'
@@ -40,6 +43,10 @@ dependencies {
     compile 'com.zyao89:zloading:1.0.6'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    compile 'com.github.lzyzsd:circleprogress:1.2.1'
+    compile 'com.daimajia.numberprogressbar:library:1.4@aar'
+    compile 'devlight.io:arcprogressstackview:1.0.4'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.google.code.gson:gson:2.8.2'
 }

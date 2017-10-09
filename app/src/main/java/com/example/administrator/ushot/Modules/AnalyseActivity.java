@@ -3,8 +3,12 @@ package com.example.administrator.ushot.Modules;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.WindowManager;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.administrator.ushot.R;
 import com.example.administrator.ushot.Views.RadarMarkerView;
 import com.github.mikephil.charting.animation.Easing;
@@ -19,6 +23,7 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -27,8 +32,17 @@ import butterknife.ButterKnife;
 
 public class AnalyseActivity extends AppCompatActivity {
 
-    @BindView(R.id.radar_char)
+    String json = null;
+    @BindView(R.id.radar_chart)
     RadarChart chart;
+    String[] mActivities = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
+    ResultBean resultBean;
+    @BindView(R.id.register_identify_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progbar_total)
+    NumberProgressBar scoreBar;
+    @BindView(R.id.recyclerview_analyse)
+    RecyclerView recyclerviewAnalyse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +51,31 @@ public class AnalyseActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_analyse);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
+        json = getIntent().getStringExtra("json");
+        Gson gson = new Gson();
+        resultBean = gson.fromJson(json, ResultBean.class);
+        initChart();
+        setScore();
+    }
+
+
+    private void setScore() {
+        float score = Float.parseFloat(resultBean.getAnalysis().getScore());
+        scoreBar.setProgress((int)score);
+    }
+
+
+    private void initChart() {
         chart.setBackgroundColor(Color.rgb(60, 65, 82));
         chart.setWebLineWidth(1.1f);
         chart.setWebColor(Color.LTGRAY);
@@ -48,7 +86,7 @@ public class AnalyseActivity extends AppCompatActivity {
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
 
-        setData();
+        setRadarData();
 
         chart.animateXY(
                 1400, 1400,
@@ -61,8 +99,6 @@ public class AnalyseActivity extends AppCompatActivity {
         xAxis.setYOffset(0f);
         xAxis.setXOffset(0f);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
-
-            private String[] mActivities = new String[]{"Burger", "Steak", "Salad", "Pasta", "Pizza"};
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -90,26 +126,38 @@ public class AnalyseActivity extends AppCompatActivity {
         l.setTextColor(Color.WHITE);
     }
 
-    public void setData() {
 
-        float mult = 80;
-        float min = 20;
-        int cnt = 5;
+    public void setRadarData() {
 
-        ArrayList<RadarEntry> entries1 = new ArrayList<RadarEntry>();
-        ArrayList<RadarEntry> entries2 = new ArrayList<RadarEntry>();
+        ArrayList<RadarEntry> entries_user = new ArrayList<RadarEntry>();
+        ArrayList<RadarEntry> entries_aver = new ArrayList<RadarEntry>();
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (int i = 0; i < cnt; i++) {
-            float val1 = (float) (Math.random() * mult) + min;
-            entries1.add(new RadarEntry(val1));
-
+        float mult = 80, min = 20;
+        for (int i = 0; i < 7; i++) {
             float val2 = (float) (Math.random() * mult) + min;
-            entries2.add(new RadarEntry(val2));
+            entries_aver.add(new RadarEntry(val2));
         }
 
-        RadarDataSet set1 = new RadarDataSet(entries1, "Last Week");
+        ResultBean.SceneBean scene = resultBean.getScene();
+        ResultBean.AnalysisBean analysis = resultBean.getAnalysis();
+        float balancing = Float.parseFloat(analysis.getBalancingElement()),
+                symmetry = Float.parseFloat(analysis.getSymmetry()),
+                light = Float.parseFloat(analysis.getLight()),
+                harmony = Float.parseFloat(analysis.getColorHarmony()),
+                content = Float.parseFloat(analysis.getContent()),
+                object = Float.parseFloat(analysis.getObject()),
+                vivid = Float.parseFloat(analysis.getVividColor());
+        entries_user.add(new RadarEntry(balancing * 100));
+        entries_user.add(new RadarEntry(symmetry * 100));
+        entries_user.add(new RadarEntry(light * 100));
+        entries_user.add(new RadarEntry(harmony * 100));
+        entries_user.add(new RadarEntry(content * 100));
+        entries_user.add(new RadarEntry(object * 100));
+        entries_user.add(new RadarEntry(vivid * 100));
+
+        RadarDataSet set1 = new RadarDataSet(entries_user, "照片分析");
         set1.setColor(Color.rgb(103, 110, 129));
         set1.setFillColor(Color.rgb(103, 110, 129));
         set1.setDrawFilled(true);
@@ -118,7 +166,7 @@ public class AnalyseActivity extends AppCompatActivity {
         set1.setDrawHighlightCircleEnabled(true);
         set1.setDrawHighlightIndicators(false);
 
-        RadarDataSet set2 = new RadarDataSet(entries2, "This Week");
+        RadarDataSet set2 = new RadarDataSet(entries_aver, "平均水平");
         set2.setColor(Color.rgb(121, 162, 175));
         set2.setFillColor(Color.rgb(121, 162, 175));
         set2.setDrawFilled(true);

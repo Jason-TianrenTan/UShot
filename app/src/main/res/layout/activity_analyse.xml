@@ -7,9 +7,79 @@
     android:orientation="vertical"
     tools:context="com.example.administrator.ushot.Modules.AnalyseActivity">
 
-    <com.github.mikephil.charting.charts.RadarChart
-        android:id="@+id/radar_char"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/register_identify_toolbar"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+        <TextView
+            style="@style/MainToolbarTitleStyle"
+            android:text="分析结果"
+            />
+    </android.support.v7.widget.Toolbar>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.RadarChart
+                android:id="@+id/radar_chart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp" />
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="综合评分"
+                    android:layout_gravity="center"
+                    android:textColor="@color/gray"
+                    android:textSize="24dp"
+                    android:paddingLeft="5dp"/>
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:paddingLeft="15dp"
+                    android:id="@+id/progbar_total"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    app:progress_text_size="25dp"
+                    app:progress_current="30"
+                    app:progress_reached_bar_height="20dp"
+                    app:progress_unreached_bar_height="2dp"
+                    />
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerview_analyse"/>
+            
+
+        </LinearLayout>
+
+
+
+    </android.support.v4.widget.NestedScrollView>
+
 
 </LinearLayout>

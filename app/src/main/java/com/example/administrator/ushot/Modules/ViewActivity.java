@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 public class ViewActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
 
 
+    ZLoadingDialog dialog;
     String path = null;
     @BindView(R.id.nav_view)
     BottomNavigationBar bottomLayout;
@@ -37,7 +38,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventCall(AnalyseEvent event) {
-        System.out.println("on event call");
+        dialog.dismiss();
         String result = event.getResult();
         Intent intent = new Intent(ViewActivity.this, AnalyseActivity.class);
         intent.putExtra("json", result);
@@ -56,6 +57,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         uploadImage();
         initNavigationBar();
         displayImage();
+     //   startActivity(new Intent(ViewActivity.this, AnalyseActivity.class));
     }
 
 
@@ -85,7 +87,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
 
     private void uploadImage() {
-        ZLoadingDialog dialog = new ZLoadingDialog(ViewActivity.this);
+        dialog = new ZLoadingDialog(ViewActivity.this);
         dialog.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
                 .setLoadingColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .setCanceledOnTouchOutside(false)
