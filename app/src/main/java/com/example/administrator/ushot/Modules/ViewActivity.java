@@ -1,5 +1,6 @@
 package com.example.administrator.ushot.Modules;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,14 +8,18 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -23,6 +28,7 @@ import com.example.administrator.ushot.Events.AnalyseEvent;
 import com.example.administrator.ushot.R;
 import com.example.administrator.ushot.Tools.UploadTask;
 import com.example.administrator.ushot.Views.RadarMarkerView;
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -49,6 +55,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import devlight.io.library.ArcProgressStackView;
+import com.flipboard.bottomsheet.commons.MenuSheetView;
 
 public class ViewActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
 
@@ -95,7 +102,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         uploadImage();
         initNavigationBar();
         displayImage();
-        initBottomSheet();
+//        initBottomSheet();
     }
 
 
@@ -104,7 +111,6 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         resultBean = gson.fromJson(json, ResultBean.class);
         initChart();
     }
-
 
 
     private void processData() {
@@ -234,7 +240,6 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         chart.invalidate();
     }
 
-
     private void initBottomSheet() {
         behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -293,18 +298,33 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         new UploadTask(path).execute();
     }
 
+    protected BottomSheetLayout bottomSheetLayout;
+    private BottomSheetBehavior mBottomSheetBehavior1;
     @Override
     public void onTabSelected(int position) {
-<<<<<<< HEAD
-        switch (position)
-        {
+        switch (position) {
             case 0:
+                BottomSheetDialogFragment bottomSheetDialogFragment = new CustomBottom();
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
                 break;
             case 1:
+//                View bottomSheet = findViewById(R.id.bottom_sheet2);
+//                mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+//                if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+//                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+////                    mButton1.setText(R.string.collapse_button1);
+//                }
+//                else {
+//                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+////                    mButton1.setText(R.string.button1);
+//                }
+                bottomSheetLayout = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+                bottomSheetLayout.setPeekOnDismiss(true);
+                showMenuSheet(MenuSheetView.MenuType.LIST);
                 break;
             case 2:
                 //分享按钮
-                File imgFile = new  File(path);
+                File imgFile = new File(path);
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imgFile.getAbsolutePath());
@@ -312,9 +332,26 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
                 startActivity(Intent.createChooser(shareIntent, "分享"));
                 break;
         }
-=======
         tabPressed(position);
->>>>>>> 3ae57fab2805602861abcbca0b26cd78c8e42351
+    }
+
+    private void showMenuSheet(final MenuSheetView.MenuType menuType) {
+        MenuSheetView menuSheetView =
+                new MenuSheetView(ViewActivity.this, menuType, "Create...", new MenuSheetView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(ViewActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (bottomSheetLayout.isSheetShowing()) {
+                            bottomSheetLayout.dismissSheet();
+                        }
+//                        if (item.getItemId() == R.id.) {
+//                            showMenuSheet(menuType == MenuSheetView.MenuType.LIST ? MenuSheetView.MenuType.GRID : MenuSheetView.MenuType.LIST);
+//                        }
+                        return true;
+                    }
+                });
+        menuSheetView.inflateMenu(R.menu.tools);
+        bottomSheetLayout.showWithSheetView(menuSheetView);
     }
 
     @Override
@@ -331,7 +368,8 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     private void tabPressed(int position) {
         if (position == 0) {
             //display bottom sheet
-            generateBottomSheet();
+//            generateBottomSheet();
+
         }
     }
 
@@ -339,10 +377,10 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     private void generateBottomSheet() {
         if (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-        else {
+        } else {
             behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
 
 }
+
