@@ -2,9 +2,7 @@ package com.example.administrator.ushot.Modules;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,15 +35,15 @@ public class AnalyseActivity extends AppCompatActivity {
 
     float[] entry_arr = new float[7];
     String json = null;
-    @BindView(R.id.radar_chart)
+    @BindView(R.id.activity_radar_chart)
     RadarChart chart;
     String[] mActivities = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
     ResultBean resultBean;
     @BindView(R.id.register_identify_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.progbar_total)
+    @BindView(R.id.activity_progbar_total)
     NumberProgressBar scoreBar;
-    @BindView(R.id.progressstack_score)
+    @BindView(R.id.activity_progressstack_score)
     ArcProgressStackView arcProgressStackView;
 
     @Override
@@ -66,6 +64,7 @@ public class AnalyseActivity extends AppCompatActivity {
         });
 
         json = getIntent().getStringExtra("json");
+        System.out.println("json = " + json);
         Gson gson = new Gson();
         resultBean = gson.fromJson(json, ResultBean.class);
         initChart();
