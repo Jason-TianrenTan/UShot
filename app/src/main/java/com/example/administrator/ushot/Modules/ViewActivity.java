@@ -98,8 +98,22 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
     @Override
     public void onTabSelected(int position) {
-
-
+        switch (position)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                //分享按钮
+                File imgFile = new  File(path);
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imgFile.getAbsolutePath());
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, "分享"));
+                break;
+        }
     }
 
     @Override
