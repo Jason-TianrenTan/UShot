@@ -48,9 +48,9 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
     private void initNavigationBar() {
         BottomNavigationItem analyseItem, toolsItem, shareItem;
-        analyseItem = new BottomNavigationItem(R.drawable.analyse, "分析").setActiveColor(R.color.blue);
-        toolsItem = new BottomNavigationItem(R.drawable.tools, "工具").setActiveColor(R.color.red);
-        shareItem = new BottomNavigationItem(R.drawable.share, "分享").setActiveColor(R.color.yellow);
+        analyseItem = new BottomNavigationItem(R.drawable.ic_assessment_24dp, "分析").setActiveColor(R.color.red);
+        toolsItem = new BottomNavigationItem(R.drawable.ic_burst_mode_24dp, "工具").setActiveColor(R.color.red);
+        shareItem = new BottomNavigationItem(R.drawable.ic_share_24dp, "分享").setActiveColor(R.color.red);
         bottomLayout.setMode(BottomNavigationBar.MODE_FIXED);
         bottomLayout.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         bottomLayout.addItem(analyseItem)

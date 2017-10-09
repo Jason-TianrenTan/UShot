@@ -18,6 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/img_view"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+        android:background="@drawable/image_border"
         android:layout_above="@id/nav_view"/>
 
 </RelativeLayout>
