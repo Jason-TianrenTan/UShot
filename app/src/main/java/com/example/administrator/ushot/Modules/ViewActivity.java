@@ -1,14 +1,24 @@
 package com.example.administrator.ushot.Modules;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.example.administrator.ushot.Events.AnalyseEvent;
 import com.example.administrator.ushot.R;
+import com.example.administrator.ushot.Tools.UploadTask;
+import com.zyao89.view.zloading.ZLoadingDialog;
+import com.zyao89.view.zloading.Z_TYPE;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
@@ -24,14 +34,26 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     @BindView(R.id.img_view)
     ImageView imageView;
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventCall(AnalyseEvent event) {
+        System.out.println("on event call");
+        String result = event.getResult();
+        Intent intent = new Intent(ViewActivity.this, AnalyseActivity.class);
+        intent.putExtra("json", result);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
 
         path = getIntent().getStringExtra("imageUri");
-        System.out.println("path = " + path);
+        uploadImage();
         initNavigationBar();
         displayImage();
     }
@@ -59,6 +81,17 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
                 .setFirstSelectedPosition(0)
                 .initialise();
         bottomLayout.setTabSelectedListener(this);
+    }
+
+
+    private void uploadImage() {
+        ZLoadingDialog dialog = new ZLoadingDialog(ViewActivity.this);
+        dialog.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
+                .setLoadingColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setCanceledOnTouchOutside(false)
+                .setHintText("分析图片中...")
+                .show();
+        new UploadTask(path).execute();
     }
 
     @Override
