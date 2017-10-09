@@ -8,6 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MainToolBarStyle" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/whitesmoke</item>
+        <item name="android:textColorSecondary">@color/whitesmoke</item>
+        <item name="actionMenuTextColor">@color/whitesmoke</item>
+    </style>
+
     <style name="MainToolbarTitleStyle" parent="Theme.AppCompat">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

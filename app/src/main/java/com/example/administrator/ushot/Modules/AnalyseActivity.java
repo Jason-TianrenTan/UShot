@@ -2,6 +2,7 @@ package com.example.administrator.ushot.Modules;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,9 +30,12 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import devlight.io.library.ArcProgressStackView;
 
 public class AnalyseActivity extends AppCompatActivity {
 
+
+    float[] entry_arr = new float[7];
     String json = null;
     @BindView(R.id.radar_chart)
     RadarChart chart;
@@ -43,6 +47,8 @@ public class AnalyseActivity extends AppCompatActivity {
     NumberProgressBar scoreBar;
     @BindView(R.id.recyclerview_analyse)
     RecyclerView recyclerviewAnalyse;
+    @BindView(R.id.progressstack_score)
+    ArcProgressStackView arcProgressStackView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +77,52 @@ public class AnalyseActivity extends AppCompatActivity {
 
     private void setScore() {
         float score = Float.parseFloat(resultBean.getAnalysis().getScore());
-        scoreBar.setProgress((int)score);
+        scoreBar.setProgress((int) score);
+
+        String bgColor_str = "#f5f5f5";
+        int bgColor = Color.parseColor(bgColor_str);
+        String[] colors = {"#1e90ff", "#00bfff", "#87ceeb", "#afeeee"};
+        int[] ftColors = new int[colors.length];
+        for (int i = 0; i < colors.length; i++)
+            ftColors[i] = Color.parseColor(colors[i]);
+        final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
+        models.add(new ArcProgressStackView.Model("RuleOfThirds", 25, bgColor, ftColors[0]));
+        models.add(new ArcProgressStackView.Model("MotionBlur", 50, bgColor, ftColors[1]));
+        models.add(new ArcProgressStackView.Model("DoF", 75, bgColor, ftColors[2]));
+        models.add(new ArcProgressStackView.Model("Repetition", 800, bgColor, ftColors[3]));
+
+        arcProgressStackView.setModels(models);
     }
 
 
+    private void processData() {
+        ResultBean.SceneBean scene = resultBean.getScene();
+        ResultBean.AnalysisBean analysis = resultBean.getAnalysis();
+        float balancing = Float.parseFloat(analysis.getBalancingElement()),
+                symmetry = Float.parseFloat(analysis.getSymmetry()),
+                light = Float.parseFloat(analysis.getLight()),
+                harmony = Float.parseFloat(analysis.getColorHarmony()),
+                content = Float.parseFloat(analysis.getContent()),
+                object = Float.parseFloat(analysis.getObject()),
+                vivid = Float.parseFloat(analysis.getVividColor());
+        float[] temp = {balancing, symmetry, light, harmony, content, object, vivid};
+        for (int i = 0; i < temp.length; i++) {
+            float f = temp[i];
+            if (f > 0)
+                f = f * 100 + 45;
+            else
+                f = 70 + f * 20;
+            if (f <= 0)
+                f = 15;
+            if (f > 100)
+                f = 100;
+            entry_arr[i] = f;
+            mActivities[i] += String.format("(%.1f)", f);
+        }
+    }
+
     private void initChart() {
+        processData();//处理数据
         chart.setBackgroundColor(Color.rgb(60, 65, 82));
         chart.setWebLineWidth(1.1f);
         chart.setWebColor(Color.LTGRAY);
@@ -134,28 +181,13 @@ public class AnalyseActivity extends AppCompatActivity {
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        float mult = 80, min = 20;
+        float mult = 20, min = 50;
         for (int i = 0; i < 7; i++) {
             float val2 = (float) (Math.random() * mult) + min;
             entries_aver.add(new RadarEntry(val2));
+            entries_user.add(new RadarEntry(entry_arr[i]));
         }
 
-        ResultBean.SceneBean scene = resultBean.getScene();
-        ResultBean.AnalysisBean analysis = resultBean.getAnalysis();
-        float balancing = Float.parseFloat(analysis.getBalancingElement()),
-                symmetry = Float.parseFloat(analysis.getSymmetry()),
-                light = Float.parseFloat(analysis.getLight()),
-                harmony = Float.parseFloat(analysis.getColorHarmony()),
-                content = Float.parseFloat(analysis.getContent()),
-                object = Float.parseFloat(analysis.getObject()),
-                vivid = Float.parseFloat(analysis.getVividColor());
-        entries_user.add(new RadarEntry(balancing * 100));
-        entries_user.add(new RadarEntry(symmetry * 100));
-        entries_user.add(new RadarEntry(light * 100));
-        entries_user.add(new RadarEntry(harmony * 100));
-        entries_user.add(new RadarEntry(content * 100));
-        entries_user.add(new RadarEntry(object * 100));
-        entries_user.add(new RadarEntry(vivid * 100));
 
         RadarDataSet set1 = new RadarDataSet(entries_user, "照片分析");
         set1.setColor(Color.rgb(103, 110, 129));
@@ -176,8 +208,9 @@ public class AnalyseActivity extends AppCompatActivity {
         set2.setDrawHighlightIndicators(false);
 
         ArrayList<IRadarDataSet> sets = new ArrayList<IRadarDataSet>();
-        sets.add(set1);
+
         sets.add(set2);
+        sets.add(set1);
 
         RadarData data = new RadarData(sets);
         //    data.setValueTypeface(mTfLight);

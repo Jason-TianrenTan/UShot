@@ -10,15 +10,16 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/register_identify_toolbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true"
         android:minHeight="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
+        app:theme="@style/MainToolBarStyle">
+
         <TextView
             style="@style/MainToolbarTitleStyle"
-            android:text="分析结果"
-            />
+            android:text="分析结果" />
     </android.support.v7.widget.Toolbar>
 
 
@@ -40,40 +41,73 @@
                 android:layout_height="400dp" />
 
             <LinearLayout
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="综合评分"
                     android:layout_gravity="center"
+                    android:paddingLeft="5dp"
+                    android:text="综合评分"
                     android:textColor="@color/gray"
-                    android:textSize="24dp"
-                    android:paddingLeft="5dp"/>
+                    android:textSize="24dp" />
 
                 <com.daimajia.numberprogressbar.NumberProgressBar
-                    android:paddingLeft="15dp"
                     android:id="@+id/progbar_total"
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    app:progress_text_size="25dp"
+                    android:layout_gravity="center"
+                    android:paddingLeft="15dp"
                     app:progress_current="30"
                     app:progress_reached_bar_height="20dp"
-                    app:progress_unreached_bar_height="2dp"
-                    />
+                    app:progress_text_size="25dp"
+                    app:progress_unreached_bar_height="2dp" />
             </LinearLayout>
 
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="我也不知道写点什么"
+                android:padding="5dp"
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <devlight.io.library.ArcProgressStackView
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_gravity="center"
+                android:id="@+id/progressstack_score"
+                app:apsv_animated="true"
+                app:apsv_animation_duration="1000"
+                app:apsv_dragged="false"
+                app:apsv_draw_width="75%"
+                app:apsv_indicator_orientation="vertical"
+                app:apsv_interpolator="@android:anim/bounce_interpolator"
+                app:apsv_leveled="false"
+                app:apsv_model_bg_enabled="true"
+                app:apsv_model_offset="2dp"
+                app:apsv_preview_bg="#ccc"
+                app:apsv_preview_colors="@array/default_preview"
+                app:apsv_rounded="false"
+                app:apsv_shadow_angle="90"
+                app:apsv_shadow_color="@color/gainsboro"
+                app:apsv_shadow_distance="5dp"
+                app:apsv_shadow_radius="3dp"
+                app:apsv_shadowed="false"
+                app:apsv_start_angle="270"
+                app:apsv_sweep_angle="360"
+                app:apsv_text_color="#fff" />
 
             <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="30dp"
+                android:id="@+id/recyclerview_analyse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recyclerview_analyse"/>
-            
+                android:layout_marginTop="30dp" />
+
+
 
         </LinearLayout>
 
