@@ -39,6 +39,7 @@ import devlight.io.library.ArcProgressStackView;
 
 import static com.example.administrator.ushot.Configs.GlobalConfig.ARC_TYPE;
 import static com.example.administrator.ushot.Configs.GlobalConfig.BAR_TYPE;
+import static com.example.administrator.ushot.Configs.GlobalConfig.BUBBLE_TYPE;
 
 /**
  * Created by Administrator on 2017/10/10 0010.
@@ -63,9 +64,11 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     ArrayList<DataGraph> graphList = new ArrayList<>();
 
     float[] arc_entries = new float[4];
-    String[] arc_attr = new String[]{"RuleOfThirds","MotionBlur","DoF","Repetition"};
+    String[] arc_attr = new String[]{"RuleOfThirds", "MotionBlur", "DoF", "Repetition"};
     float[] bar_entries = new float[4];
-    String[] bar_attr = new String[]{"Light","ColorHarmony","VividColor", "Repetition"};
+    String[] bar_attr = new String[]{"Light", "ColorHarmony", "VividColor", "Repetition"};
+    float[] bubble_entries = new float[6];
+    String[] bubble_attr = new String[]{"Balancing", "Symmetry", "RuleOfThirds", "DoF", "Content", "Object"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -103,10 +106,19 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         for (int i = 0; i < bar_arr.length; i++)
             bar_entries[i] = bar_arr[i];
 
+        //bubble
+        float[] bubble_arr = new float[]{Float.parseFloat(analysisBean.getBalancingElement()), Float.parseFloat(analysisBean.getSymmetry()),
+                Float.parseFloat(analysisBean.getRuleOfThirds()), Float.parseFloat(analysisBean.getDoF()),
+                Float.parseFloat(analysisBean.getContent()), Float.parseFloat(analysisBean.getObject())};
+        for (int i = 0; i < bubble_arr.length; i++)
+            bubble_entries[i] = bubble_arr[i];
+
         DataGraph arcGraph = new DataGraph(ARC_TYPE, arc_attr, arc_entries),
-                barGraph = new DataGraph(BAR_TYPE, bar_attr, bar_entries);
+                barGraph = new DataGraph(BAR_TYPE, bar_attr, bar_entries),
+                bubbleGraph = new DataGraph(BUBBLE_TYPE, bubble_attr, bubble_entries);
         graphList.add(arcGraph);
         graphList.add(barGraph);
+        graphList.add(bubbleGraph);
     }
 
 
@@ -137,8 +149,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                 vivid = Float.parseFloat(analysis.getVividColor());
         float[] temp = {balancing, symmetry, light, harmony, content, object, vivid};
         for (int i = 0; i < temp.length; i++) {
-            float f = temp[i];
-            entry_arr[i] = DataProcessor.process(f);
+            float f = DataProcessor.process(temp[i]);
+            entry_arr[i] = f;
             mActivities[i] = baseStrings[i] + String.format("(%.1f)", f);
         }
     }
