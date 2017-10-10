@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.setView(dialog);
-        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(R.mipmap.ushot_icon);
         builder.show();
 
     }

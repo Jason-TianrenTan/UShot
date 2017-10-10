@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="待定"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ushot_icon"
         />
     <item
         android:title="多张优选"

@@ -193,10 +193,11 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 BubbleChartData bubbleData=new BubbleChartData(pointValues);//定义气泡图的数据对象
                 bubbleData.setBubbleScale(0.2f);//设置气泡的比例大小
-                bubbleData.setHasLabelsOnlyForSelected(false);//设置文本只有当点击时显示
+                bubbleData.setHasLabels(true);
+                bubbleData.setHasLabelsOnlyForSelected(true);//设置文本只有当点击时显示
                 bubbleData.setMinBubbleRadius(1);//设置气泡的最小半径
                 bubbleData.setValueLabelsTextColor(Color.BLACK);// 设置数据文字颜色
-                bubbleData.setValueLabelTextSize(15);// 设置数据文字大小
+                bubbleData.setValueLabelTextSize(12);// 设置数据文字大小
                 bubbleData.setValueLabelTypeface(Typeface.MONOSPACE);// 设置数据文字样式
                 bubbleData.setAxisYLeft(axisY);// 将Y轴属性设置到左边
                 bubbleData.setAxisXBottom(axisX);// 将X轴属性设置到底部
