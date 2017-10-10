@@ -25,7 +25,7 @@
                 <TextView
                     style="@style/MainToolbarTitleStyle"
                     android:layout_centerInParent="true"
-                    android:text="UShot" />
+                    android:text="@string/app_title" />
 
                 <ImageView
                     android:layout_width="25dp"
@@ -36,7 +36,6 @@
                     android:src="@drawable/ic_help" />
 
             </RelativeLayout>
-
 
         </android.support.v7.widget.Toolbar>
 
@@ -76,7 +75,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 </android.support.design.widget.CoordinatorLayout>
