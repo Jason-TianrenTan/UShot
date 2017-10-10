@@ -4,11 +4,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.example.administrator.ushot.Modules.DataGraph;
 import com.example.administrator.ushot.Modules.ResultBean;
 import com.example.administrator.ushot.R;
 import com.github.mikephil.charting.animation.Easing;
@@ -38,9 +41,11 @@ import devlight.io.library.ArcProgressStackView;
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
+
     float[] entry_arr = new float[7];
     String[] mActivities = new String[7];
-    String[] baseStrings = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
+    String[] baseStrings = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony",
+            "Content", "Object", "Vivid"};
     ResultBean resultBean;
     @BindView(R.id.radar_chart)
     RadarChart chart;
@@ -48,7 +53,15 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     NumberProgressBar scoreBar;
     @BindView(R.id.sheet_progressstack_score)
     ArcProgressStackView arcProgressStackView;
+    @BindView(R.id.chart_recylcerview)
+    RecyclerView recyclerView;
     Unbinder unbinder;
+
+    ArrayList<DataGraph> graphList = new ArrayList<>();
+
+    float[] bar_entries = new float[6];
+    String[] bar_attr = new String[]{"Balancing", "Light", "ColorHarmony",
+            "Object", "VividColor", "Repetition"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,15 +73,42 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         resultBean = gson.fromJson(json, ResultBean.class);
         initChart();
         setScore();
-
         return view;
     }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+
+    private void initChartData() {
+
+        ResultBean.AnalysisBean analysisBean = resultBean.getAnalysis();
+        //arc
+        float[] arc_arr = new float[]{Float.parseFloat(analysisBean.getBalancingElement()), Float.parseFloat(analysisBean.getSymmetry()),
+                Float.parseFloat(analysisBean.getLight()), Float.parseFloat(analysisBean.getColorHarmony()),
+                Float.parseFloat(analysisBean.getContent()), Float.parseFloat(analysisBean.getObject()),
+                Float.parseFloat(analysisBean.getVividColor())};
+        for (int i = 0; i < arc_arr.length; i++)
+            entry_arr[i] = arc_arr[i];
+
+        //bar
+        float[] bar_arr = new float[]{Float.parseFloat(analysisBean.getBalancingElement()), Float.parseFloat(analysisBean.getLight()),
+                Float.parseFloat(analysisBean.getColorHarmony()), Float.parseFloat(analysisBean.getObject()),
+                Float.parseFloat(analysisBean.getVividColor()), Float.parseFloat(analysisBean.getRepetition())};
+        for (int i = 0; i < bar_arr.length; i++)
+            bar_entries[i] = bar_arr[i];
+    }
+
+
+    private void initRecyclerView() {
+        GraphAdapter adapter = new GraphAdapter(graphList);
+        recyclerView.setAdapter(adapter);
+    }
+
 
     private void setScore() {
         float score = Float.parseFloat(resultBean.getAnalysis().getScore());

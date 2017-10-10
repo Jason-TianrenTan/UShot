@@ -4,7 +4,7 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="550dp"
-    android:background="@color/floralwhite"
+    android:background="#E0E0E0"
     android:orientation="vertical"
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
@@ -24,7 +24,6 @@
             style="@style/MainToolbarTitleStyle"
             android:text="分析结果" />
     </android.support.v7.widget.Toolbar>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -39,10 +38,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
-                android:text="雷达图"
-                android:textColor="@color/gray"
-                android:textSize="24dp" />
+                android:text="整体表现"
+                android:textColor="#0091EA"
+                android:textSize="18dp" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -68,8 +68,8 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:text="综合评分"
-                    android:textColor="@color/gray"
-                    android:textSize="24dp" />
+                    android:textColor="#0091EA"
+                    android:textSize="18dp" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -103,30 +103,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="5dp"
-                android:text="Something"
-                android:textSize="24dp" />
+                android:textColor="#0091EA"
+                android:text="色彩分析"
+                android:textSize="18dp" />
 
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/chart_recylcerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="5dp">
 
                 <LinearLayout
-                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"
                         android:paddingLeft="5dp"
-                        android:text="Chart title"
+                        android:text="螺旋图"
                         android:textColor="@color/gray"
-                        android:textSize="16dp"
-                        android:layout_marginBottom="5dp"/>
+                        android:textSize="14dp" />
 
                     <devlight.io.library.ArcProgressStackView
                         android:id="@+id/sheet_progressstack_score"
@@ -177,6 +182,8 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+
 
 
 </LinearLayout>
