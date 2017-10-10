@@ -14,7 +14,13 @@
         <com.manolovn.trianglify.TrianglifyView
             android:id="@+id/trianglify_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/white"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -47,9 +53,10 @@
         <LinearLayout
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:elevation="10dp"
             android:orientation="vertical">
 
             <Button

@@ -12,10 +12,12 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -25,6 +27,8 @@ import com.example.administrator.ushot.R;
 import com.example.administrator.ushot.Tools.UploadTask;
 import com.example.administrator.ushot.Views.BottomSheetFragment;
 import com.example.administrator.ushot.Views.RadarMarkerView;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -76,8 +80,11 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     @BindView(R.id.btn_moreinfo)
     Button infoButton;
 
+    //弹出分析
     BottomSheetFragment fragment = null;
 
+    //弹出工具
+    BottomSheetLayout bottomTool;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventCall(AnalyseEvent event) {
@@ -94,6 +101,10 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         ButterKnife.bind(this);
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+
+        //弹出工具初始化
+        bottomTool = (BottomSheetLayout) findViewById(R.id.tools_sheet);
+        bottomTool.setPeekOnDismiss(true);
 
         path = getIntent().getStringExtra("imageUri");
         uploadImage();
@@ -187,6 +198,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
         if (position == 1) {
             //display tool menu
+            showMenuSheet(MenuSheetView.MenuType.LIST);
         }
 
         if (position == 2) {
@@ -209,6 +221,26 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
             fragment.setArguments(bundle);
         }
         fragment.show(getSupportFragmentManager(), BottomSheetFragment.class.getSimpleName());
+    }
+
+
+    private void showMenuSheet(final MenuSheetView.MenuType menuType) {
+        MenuSheetView menuSheetView =
+                new MenuSheetView(ViewActivity.this, menuType, "更多功能...", new MenuSheetView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(ViewActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (bottomTool.isSheetShowing()) {
+                            bottomTool.dismissSheet();
+                        }
+//                        if (item.getItemId() == R.id.reopen) {
+//                            showMenuSheet(menuType == MenuSheetView.MenuType.LIST ? MenuSheetView.MenuType.GRID : MenuSheetView.MenuType.LIST);
+//                        }
+                        return true;
+                    }
+                });
+        menuSheetView.inflateMenu(R.menu.tools_sheet);
+        bottomTool.showWithSheetView(menuSheetView);
     }
 
 }
