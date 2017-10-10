@@ -91,7 +91,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <com.flipboard.bottomsheet.BottomSheetLayout
-        android:id="@+id/bottomsheet"
+        android:id="@+id/tools_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -101,10 +101,7 @@
             android:layout_height="match_parent"
             android:gravity="end"
             android:orientation="vertical"
-            android:padding="16dp">
-
-        </LinearLayout>
-
+            android:padding="16dp"/>
     </com.flipboard.bottomsheet.BottomSheetLayout>
 
 </android.support.design.widget.CoordinatorLayout>

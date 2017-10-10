@@ -105,6 +105,9 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
             EventBus.getDefault().register(this);
 
         path = getIntent().getStringExtra("imageUri");
+
+        bottomTool = (BottomSheetLayout) findViewById(R.id.tools_sheet);
+        bottomTool.setPeekOnDismiss(true);
         uploadImage();
         initNavigationBar();
         displayImage();
