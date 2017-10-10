@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import devlight.io.library.ArcProgressStackView;
+
 import com.flipboard.bottomsheet.commons.MenuSheetView;
 
 public class ViewActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
@@ -79,7 +80,8 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     NestedScrollView bottomSheet;
     @BindView(R.id.btn_moreinfo)
     Button infoButton;
-
+    BottomSheetLayout bottomSheetLayout;
+    BottomSheetDialogFragment bottomSheetDialogFragment = new CustomBottom();
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventCall(AnalyseEvent event) {
@@ -103,6 +105,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         initNavigationBar();
         displayImage();
 //        initBottomSheet();
+//        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
     }
 
 
@@ -287,7 +290,6 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         bottomLayout.setTabSelectedListener(this);
     }
 
-
     private void uploadImage() {
         dialog = new ZLoadingDialog(ViewActivity.this);
         dialog.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
@@ -298,46 +300,15 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         new UploadTask(path).execute();
     }
 
-    protected BottomSheetLayout bottomSheetLayout;
-    private BottomSheetBehavior mBottomSheetBehavior1;
+
     @Override
     public void onTabSelected(int position) {
-        switch (position) {
-            case 0:
-                BottomSheetDialogFragment bottomSheetDialogFragment = new CustomBottom();
-                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
-                break;
-            case 1:
-//                View bottomSheet = findViewById(R.id.bottom_sheet2);
-//                mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
-//                if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-//                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-////                    mButton1.setText(R.string.collapse_button1);
-//                }
-//                else {
-//                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-////                    mButton1.setText(R.string.button1);
-//                }
-                bottomSheetLayout = (BottomSheetLayout) findViewById(R.id.bottomsheet);
-                bottomSheetLayout.setPeekOnDismiss(true);
-                showMenuSheet(MenuSheetView.MenuType.LIST);
-                break;
-            case 2:
-                //分享按钮
-                File imgFile = new File(path);
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, imgFile.getAbsolutePath());
-                shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent, "分享"));
-                break;
-        }
         tabPressed(position);
     }
 
     private void showMenuSheet(final MenuSheetView.MenuType menuType) {
         MenuSheetView menuSheetView =
-                new MenuSheetView(ViewActivity.this, menuType, "Create...", new MenuSheetView.OnMenuItemClickListener() {
+                new MenuSheetView(ViewActivity.this, menuType, "更多工具...", new MenuSheetView.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         Toast.makeText(ViewActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
@@ -364,15 +335,27 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         tabPressed(position);
     }
 
-
     private void tabPressed(int position) {
-        if (position == 0) {
-            //display bottom sheet
-//            generateBottomSheet();
-
+        switch (position) {
+            case 0:
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+                break;
+            case 1:
+                bottomSheetLayout = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+                bottomSheetLayout.setPeekOnDismiss(true);
+                showMenuSheet(MenuSheetView.MenuType.LIST);
+                break;
+            case 2:
+                //分享按钮
+                File imgFile = new File(path);
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imgFile.getAbsolutePath());
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, "分享"));
+                break;
         }
     }
-
 
     private void generateBottomSheet() {
         if (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
