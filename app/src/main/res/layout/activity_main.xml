@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.administrator.ushot.Modules.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <com.manolovn.trianglify.TrianglifyView
+            android:id="@+id/trianglify_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -43,6 +48,8 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:orientation="vertical">
 
             <Button
@@ -74,6 +81,6 @@
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
