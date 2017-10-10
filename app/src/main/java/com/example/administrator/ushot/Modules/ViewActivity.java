@@ -104,7 +104,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         uploadImage();
         initNavigationBar();
         displayImage();
-//        initBottomSheet();
+        initBottomSheet();
 //        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
     }
 
