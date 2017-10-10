@@ -314,6 +314,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         data.setDrawValues(false);
         data.setValueTextColor(Color.WHITE);
 
+        chart.setDescription(new Description());
         chart.setData(data);
         chart.invalidate();
     }
