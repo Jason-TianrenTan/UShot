@@ -1,15 +1,16 @@
-package com.example.administrator.ushot.Modules;
+package com.example.administrator.ushot.Views;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.example.administrator.ushot.Modules.ResultBean;
 import com.example.administrator.ushot.R;
-import com.example.administrator.ushot.Views.RadarMarkerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -28,49 +29,46 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import devlight.io.library.ArcProgressStackView;
 
-public class AnalyseActivity extends AppCompatActivity {
+/**
+ * Created by Administrator on 2017/10/10 0010.
+ */
 
+public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     float[] entry_arr = new float[7];
-    String json = null;
-    @BindView(R.id.activity_radar_chart)
-    RadarChart chart;
-    String[] mActivities = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
+    String[] mActivities = new String[7];
+    String[] baseStrings = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
     ResultBean resultBean;
-    @BindView(R.id.register_identify_toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.activity_progbar_total)
+    @BindView(R.id.radar_chart)
+    RadarChart chart;
+    @BindView(R.id.progbar_total)
     NumberProgressBar scoreBar;
-    @BindView(R.id.activity_progressstack_score)
+    @BindView(R.id.sheet_progressstack_score)
     ArcProgressStackView arcProgressStackView;
+    Unbinder unbinder;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_analyse);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.analyse_sheet_layout, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        json = getIntent().getStringExtra("json");
-        System.out.println("json = " + json);
+        String json = getArguments().getString("json");
         Gson gson = new Gson();
         resultBean = gson.fromJson(json, ResultBean.class);
         initChart();
         setScore();
+
+        return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     private void setScore() {
         float score = Float.parseFloat(resultBean.getAnalysis().getScore());
@@ -114,7 +112,7 @@ public class AnalyseActivity extends AppCompatActivity {
             if (f > 100)
                 f = 100;
             entry_arr[i] = f;
-            mActivities[i] += String.format("(%.1f)", f);
+            mActivities[i] = baseStrings[i] + String.format("(%.1f)", f);
         }
     }
 
@@ -126,7 +124,7 @@ public class AnalyseActivity extends AppCompatActivity {
         chart.setWebColorInner(Color.GRAY);
         chart.setWebAlpha(100);
 
-        MarkerView mv = new RadarMarkerView(this, R.layout.radar_markerview);
+        MarkerView mv = new RadarMarkerView(getActivity(), R.layout.radar_markerview);
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
 

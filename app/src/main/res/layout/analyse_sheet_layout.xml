@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
+    android:layout_height="550dp"
+    android:background="@color/floralwhite"
     android:orientation="vertical"
-    tools:context="com.example.administrator.ushot.Modules.AnalyseActivity">
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
 
 
     <android.support.v7.widget.Toolbar
@@ -23,17 +25,15 @@
             android:text="分析结果" />
     </android.support.v7.widget.Toolbar>
 
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:orientation="vertical">
 
             <TextView
@@ -50,10 +50,11 @@
                 app:cardCornerRadius="5dp">
 
                 <com.github.mikephil.charting.charts.RadarChart
-                    android:padding="5dp"
-                    android:id="@+id/activity_radar_chart"
+                    android:id="@+id/radar_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp" />
+                    android:layout_height="400dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
             </android.support.v7.widget.CardView>
 
             <LinearLayout
@@ -78,11 +79,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="5dp">
 
                         <com.daimajia.numberprogressbar.NumberProgressBar
-                            android:id="@+id/activity_progbar_total"
+                            android:id="@+id/progbar_total"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
@@ -104,6 +105,7 @@
                 android:padding="5dp"
                 android:text="Something"
                 android:textSize="24dp" />
+
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -127,7 +129,7 @@
                         android:layout_marginBottom="5dp"/>
 
                     <devlight.io.library.ArcProgressStackView
-                        android:id="@+id/activity_progressstack_score"
+                        android:id="@+id/sheet_progressstack_score"
                         android:layout_width="match_parent"
                         android:layout_height="280dp"
                         android:layout_gravity="center"
@@ -154,15 +156,28 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
+            <Button
+                android:id="@+id/btn_moreinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/button_bg"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="详细分析结果"
+                android:textColor="@color/whitesmoke" />
+
             <View
                 android:id="@+id/anchor"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"/>
+                android:layout_height="60dp" />
 
         </LinearLayout>
-
-
     </android.support.v4.widget.NestedScrollView>
 
 
 </LinearLayout>
+
