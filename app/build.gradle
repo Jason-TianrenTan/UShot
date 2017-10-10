@@ -52,6 +52,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.manolovn:trianglify:1.1.0'
+    compile 'com.manolovn:colorbrewer:1.0.0'
     compile 'com.flipboard:bottomsheet-core:1.5.3'
     compile 'com.flipboard:bottomsheet-commons:1.5.3'
 }

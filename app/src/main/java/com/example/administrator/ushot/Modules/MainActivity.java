@@ -16,8 +16,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.administrator.ushot.R;
+import com.example.administrator.ushot.Tools.MyColorGenerator;
 import com.example.administrator.ushot.Tools.TakePhotoUtil;
 import com.jph.takephoto.model.TResult;
+import com.manolovn.colorbrewer.ColorBrewer;
+import com.manolovn.trianglify.TrianglifyView;
+import com.manolovn.trianglify.generator.point.RegularPointGenerator;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
@@ -26,6 +30,7 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,12 +47,23 @@ public class MainActivity extends AppCompatActivity {
     Button btnSelectPhoto;
     @BindView(R.id.btn_take_photo)
     Button btnTakePhoto;
+    @BindView(R.id.trianglify_view)
+    TrianglifyView trianglifyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //背景生成
+        trianglifyView.getDrawable().setCellSize(175);
+        trianglifyView.getDrawable().setVariance(75);
+        final ColorBrewer[] colors = ColorBrewer.values();
+        Random rand = new Random();
+        int i = rand.nextInt(ColorBrewer.values().length);
+        trianglifyView.getDrawable().setColorGenerator(new MyColorGenerator(colors[i]));
+        trianglifyView.getDrawable().setPointGenerator(new RegularPointGenerator());
 
         photoUtil = new TakePhotoUtil(this);
         photoUtil.onCreate(savedInstanceState);

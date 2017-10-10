@@ -6,10 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.example.administrator.ushot.Modules.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <com.manolovn.trianglify.TrianglifyView
+            android:id="@+id/trianglify_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/white"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -41,14 +52,17 @@
 
         <LinearLayout
             android:layout_width="220dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:elevation="10dp"
             android:orientation="vertical">
 
             <Button
                 android:id="@+id/btn_select_photo"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="40dp"
                 android:layout_marginTop="40dp"
@@ -61,8 +75,8 @@
 
             <Button
                 android:id="@+id/btn_take_photo"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="40dp"
                 android:layout_marginTop="40dp"
@@ -74,6 +88,6 @@
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
