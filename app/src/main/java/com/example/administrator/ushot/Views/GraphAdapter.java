@@ -162,7 +162,7 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 List<BubbleValue> pointValues = new ArrayList<BubbleValue>();// 节点数据结合
                 Axis axisY = new Axis().setHasLines(true);
                 Axis axisX = new Axis();
-                axisX.setName("Norms");
+                axisX.setName("色彩标准");
                 ArrayList<AxisValue> axisValuesX = new ArrayList<AxisValue>();
                 //ArrayList<AxisValue> axisValuesY = new ArrayList<AxisValue>();
                 axisX.setValues(axisValuesX);
@@ -183,10 +183,11 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 for (int i=0;i<5;i++) {
                     BubbleValue v = new BubbleValue();
                     float x = DataProcessor.process(entries[i])/10;
-                    v.set(x, x, x);
+                    v.set(x*1.5f, x*1.5f, x*0.8f);
                     v.setColor(ContextCompat.getColor(mContext, bubble_colors[i]));
                     v.setLabel("Label");
                     v.setShape(ValueShape.CIRCLE);
+                    v.setLabel(attributes[i]);
                     pointValues.add(v);
                 }
 

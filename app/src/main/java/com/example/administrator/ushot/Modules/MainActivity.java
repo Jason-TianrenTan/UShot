@@ -3,6 +3,7 @@ package com.example.administrator.ushot.Modules;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,8 +12,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.administrator.ushot.R;
@@ -50,6 +54,24 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.trianglify_view)
     TrianglifyView trianglifyView;
 
+    @OnClick(R.id.btn_main_help)
+    public void onClick() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialog = inflater.inflate(R.layout.help_layout, (ViewGroup) findViewById(R.id.help_root));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("关于优摄");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setView(dialog);
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.show();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
             List<Uri> list = Matisse.obtainResult(data);
             imageUri = list.get(0);
             startViewActivity();
-        }
-        else {
+        } else {
             photoUtil.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -128,12 +149,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, ViewActivity.class);
         try {
             intent.putExtra("imageUri", getPath(this, imageUri));
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         startActivity(intent);
     }
-
 
 
     @SuppressLint("NewApi")
@@ -164,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
                     uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
                 selection = "_id=?";
-                selectionArgs = new String[]{ split[1] };
+                selectionArgs = new String[]{split[1]};
             }
         }
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { MediaStore.Images.Media.DATA };
+            String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = null;
             try {
                 cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);

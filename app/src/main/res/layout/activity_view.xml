@@ -28,6 +28,7 @@
                     android:text="@string/app_title" />
 
                 <ImageView
+                    android:id="@+id/btn_help_view"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentRight="true"
@@ -101,7 +102,7 @@
             android:layout_height="match_parent"
             android:gravity="end"
             android:orientation="vertical"
-            android:padding="16dp"/>
+            android:padding="16dp" />
     </com.flipboard.bottomsheet.BottomSheetLayout>
 
 </android.support.design.widget.CoordinatorLayout>

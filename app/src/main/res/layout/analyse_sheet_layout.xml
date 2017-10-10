@@ -104,7 +104,7 @@
                 android:layout_marginTop="10dp"
                 android:padding="5dp"
                 android:textColor="#0091EA"
-                android:text="色彩分析"
+                android:text="景物分析"
                 android:textSize="18dp" />
 
 
@@ -112,24 +112,7 @@
                 android:id="@+id/chart_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/btn_moreinfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/button_bg"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="详细分析结果"
-                android:textColor="@color/whitesmoke" />
 
-            <View
-                android:id="@+id/anchor"
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

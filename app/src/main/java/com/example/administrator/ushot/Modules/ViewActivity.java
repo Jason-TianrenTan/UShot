@@ -1,6 +1,7 @@
 package com.example.administrator.ushot.Modules;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,11 +12,13 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -58,6 +61,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import devlight.io.library.ArcProgressStackView;
 
 import com.flipboard.bottomsheet.commons.MenuSheetView;
@@ -71,7 +75,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     String json = null;
     @BindView(R.id.radar_chart)
     RadarChart chart;
-    String[] mActivities = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
+    String[] mActivities = new String[]{"元素平衡", "对称性", "光线", "色彩协调", "内容", "物体", "鲜艳度"};
     ResultBean resultBean;
     @BindView(R.id.progbar_total)
     NumberProgressBar scoreBar;
@@ -81,9 +85,24 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     ImageView imageView;
     @BindView(R.id.bottom_sheet)
     LinearLayout bottomSheet;
-    @BindView(R.id.btn_moreinfo)
 
-    Button infoButton;
+    @OnClick(R.id.btn_help_view)
+    public void onClick() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialog = inflater.inflate(R.layout.help_layout, (ViewGroup) findViewById(R.id.help_root));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("关于优摄");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setView(dialog);
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.show();
+
+    }
 
     BottomSheetFragment fragment = null;
     BottomSheetLayout bottomTool;

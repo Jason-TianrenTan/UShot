@@ -39,6 +39,7 @@
                     android:text="@string/app_title" />
 
                 <ImageView
+                    android:id="@+id/btn_main_help"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentRight="true"

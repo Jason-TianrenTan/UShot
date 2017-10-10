@@ -50,8 +50,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     float[] entry_arr = new float[7];
     String[] mActivities = new String[7];
-    String[] baseStrings = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony",
-            "Content", "Object", "Vivid"};
+    String[] baseStrings = new String[]{"元素平衡", "对称性", "光线", "色彩协调", "内容", "物体", "鲜艳度"};
     ResultBean resultBean;
     @BindView(R.id.radar_chart)
     RadarChart chart;
@@ -64,11 +63,11 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     ArrayList<DataGraph> graphList = new ArrayList<>();
 
     float[] arc_entries = new float[4];
-    String[] arc_attr = new String[]{"RuleOfThirds", "MotionBlur", "DoF", "Repetition"};
+    String[] arc_attr = new String[]{"三分构图", "抖动模糊", "景深", "重复性"};
     float[] bar_entries = new float[4];
-    String[] bar_attr = new String[]{"Light", "ColorHarmony", "VividColor", "Repetition"};
+    String[] bar_attr = new String[]{"光线", "色彩协调", "鲜艳度", "重复性"};
     float[] bubble_entries = new float[6];
-    String[] bubble_attr = new String[]{"Balancing", "Symmetry", "RuleOfThirds", "DoF", "Content", "Object"};
+    String[] bubble_attr = new String[]{"元素平衡", "对称性", "三分构图", "景深", "内容", "物体"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
