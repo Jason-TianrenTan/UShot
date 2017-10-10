@@ -39,7 +39,7 @@ import devlight.io.library.ArcProgressStackView;
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     float[] entry_arr = new float[7];
-    String[] mActivities;
+    String[] mActivities = new String[7];
     String[] baseStrings = new String[]{"Balancing", "Symmetry", "Light", "ColorHarmony", "Content", "Object", "Vivid"};
     ResultBean resultBean;
     @BindView(R.id.radar_chart)
