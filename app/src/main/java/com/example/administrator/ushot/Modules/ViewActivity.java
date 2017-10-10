@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -23,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -49,6 +51,10 @@ import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.google.gson.Gson;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zyao89.view.zloading.ZLoadingDialog;
 import com.zyao89.view.zloading.Z_TYPE;
 
@@ -58,6 +64,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,9 +73,12 @@ import devlight.io.library.ArcProgressStackView;
 
 import com.flipboard.bottomsheet.commons.MenuSheetView;
 
+import static com.example.administrator.ushot.Modules.MainActivity.getPath;
+
 public class ViewActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
 
 
+    public static int VIEW_REQUEST_CODE_CHOOSE = 222;
     ZLoadingDialog dialog;
     String path = null;
     float[] entry_arr = new float[7];
@@ -85,6 +95,13 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     ImageView imageView;
     @BindView(R.id.bottom_sheet)
     LinearLayout bottomSheet;
+
+    String[] entries;
+    float maxScore = -1;
+    int bestIndex = 0;
+    int upload_count = 0;
+    int current = 1;
+    boolean multiUpload = false;
 
     @OnClick(R.id.btn_help_view)
     public void onClick() {
@@ -109,10 +126,50 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventCall(AnalyseEvent event) {
-        dialog.dismiss();
-        String result = event.getResult();
-        json = result;
-        generateBottomSheet();
+        if (!multiUpload) {
+            dialog.dismiss();
+            String result = event.getResult();
+            json = result;
+            generateBottomSheet();
+        } else {
+            current++;
+            if (current <= upload_count) {
+                Gson gson = new Gson();
+                ResultBean resultBean = gson.fromJson(event.getResult(), ResultBean.class);
+                float score = Float.parseFloat(resultBean.getAnalysis().getScore());
+                if (score > maxScore) {
+                    maxScore = score;
+                    bestIndex = current - 1;
+                }
+            }
+            else {
+                dialog.dismiss();
+                LayoutInflater inflater = getLayoutInflater();
+                View dialog = inflater.inflate(R.layout.multi_sheet, (ViewGroup) findViewById(R.id.multi_root));
+                TextView textView = dialog.findViewById(R.id.best_text);
+                ImageView img = dialog.findViewById(R.id.best_img);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("最佳: 第 " + bestIndex + " 张");
+                textView.setText("得分: " + maxScore);
+
+                File imgFile = new File(entries[bestIndex - 1]);
+                if (imgFile.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    img.setImageBitmap(myBitmap);
+                }
+
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setView(dialog);
+                builder.setIcon(R.mipmap.ushot_icon);
+                builder.show();
+            }
+
+        }
     }
 
     @Override
@@ -286,6 +343,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         bottomLayout.setTabSelectedListener(this);
     }
 
+
     private void uploadImage() {
         dialog = new ZLoadingDialog(ViewActivity.this);
         dialog.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
@@ -293,7 +351,29 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
                 .setCanceledOnTouchOutside(false)
                 .setHintText("分析图片中...")
                 .show();
+        multiUpload = false;
         new UploadTask(path).execute();
+    }
+
+
+    private void uploadImages(ArrayList<Uri> list) {
+        dialog = new ZLoadingDialog(ViewActivity.this);
+        dialog.setLoadingBuilder(Z_TYPE.DOUBLE_CIRCLE)
+                .setLoadingColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .setCanceledOnTouchOutside(false)
+                .setHintText("上传 " + upload_count + "张图片中...")
+                .show();
+        multiUpload = true;
+        try {
+            entries = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                String aPath = getPath(this, list.get(i));
+                new UploadTask(aPath).execute();
+                entries[i] = aPath;
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "出现错误，请重试", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -308,13 +388,24 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
                 new MenuSheetView(ViewActivity.this, menuType, "更多功能...", new MenuSheetView.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(ViewActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (bottomTool.isSheetShowing()) {
                             bottomTool.dismissSheet();
                         }
-//                        if (item.getItemId() == R.id.reopen) {
-//                            showMenuSheet(menuType == MenuSheetView.MenuType.LIST ? MenuSheetView.MenuType.GRID : MenuSheetView.MenuType.LIST);
-//                        }
+                        if (item.getItemId() == R.id.tools_about) {
+
+                        }
+                        if (item.getItemId() == R.id.tools_multi) {
+                            Matisse.from(ViewActivity.this)
+                                    .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))//选择mime的类型
+                                    .countable(true)
+                                    .maxSelectable(3)
+                                    .capture(true)//启用相机
+                                    .captureStrategy(new CaptureStrategy(true, "com.gaosi.provider.MyFileProvider"))//自定义FileProvider
+                                    .thumbnailScale(0.85f) // 缩略图的比例
+                                    .imageEngine(new PicassoEngine()) // 使用的图片加载引擎
+                                    .theme(R.style.Matisse_Zhihu) // 黑色背景
+                                    .forResult(VIEW_REQUEST_CODE_CHOOSE);
+                        }
                         return true;
                     }
                 });
@@ -361,6 +452,16 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
             fragment.setArguments(bundle);
         }
         fragment.show(getSupportFragmentManager(), BottomSheetFragment.class.getSimpleName());
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == VIEW_REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
+            ArrayList<Uri> list = (ArrayList<Uri>) Matisse.obtainResult(data);
+            upload_count = list.size();
+            uploadImages(list);
+        }
     }
 }
 
