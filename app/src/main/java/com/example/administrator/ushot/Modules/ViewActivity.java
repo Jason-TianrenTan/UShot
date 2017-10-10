@@ -12,6 +12,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +27,7 @@ import com.example.administrator.ushot.Views.RadarMarkerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
@@ -69,7 +71,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     @BindView(R.id.img_view)
     ImageView imageView;
     @BindView(R.id.bottom_sheet)
-    NestedScrollView bottomSheet;
+    LinearLayout bottomSheet;
     @BindView(R.id.btn_moreinfo)
     Button infoButton;
 
@@ -168,7 +170,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
         YAxis yAxis = chart.getYAxis();
         //    yAxis.setTypeface(mTfLight);
-        yAxis.setLabelCount(5, false);
+        yAxis.setLabelCount(7, false);
         yAxis.setTextSize(9f);
         yAxis.setAxisMinimum(0f);
         yAxis.setAxisMaximum(80f);
@@ -232,6 +234,11 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
 
         chart.setData(data);
         chart.invalidate();
+        Description description = new Description();
+        description.setText("转动以显示更多");
+        description.setTextColor(ContextCompat.getColor(this, R.color.white_pressed));
+        description.setTextSize(14);
+        chart.setDescription(description);
     }
 
 
@@ -313,6 +320,9 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         if (position == 0) {
             //display bottom sheet
             generateBottomSheet();
+            WindowManager.LayoutParams windowManager = getWindow().getAttributes();
+            windowManager.dimAmount = 0.75f;
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
     }
 
