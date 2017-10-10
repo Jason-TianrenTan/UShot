@@ -23,6 +23,7 @@ import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.administrator.ushot.Events.AnalyseEvent;
 import com.example.administrator.ushot.R;
 import com.example.administrator.ushot.Tools.UploadTask;
+import com.example.administrator.ushot.Views.BottomSheetFragment;
 import com.example.administrator.ushot.Views.RadarMarkerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
@@ -75,12 +76,13 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
     @BindView(R.id.btn_moreinfo)
     Button infoButton;
 
+    BottomSheetFragment fragment = null;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventCall(AnalyseEvent event) {
         dialog.dismiss();
         String result = event.getResult();
-        initBottomData(result);
         json = result;
         generateBottomSheet();
     }
@@ -97,16 +99,7 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         uploadImage();
         initNavigationBar();
         displayImage();
-        initBottomSheet();
     }
-
-
-    private void initBottomData(String json) {
-        Gson gson = new Gson();
-        resultBean = gson.fromJson(json, ResultBean.class);
-        initChart();
-    }
-
 
 
     private void processData() {
@@ -134,136 +127,6 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
             mActivities[i] += String.format("(%.1f)", f);
         }
     }
-
-    private void initChart() {
-        processData();//处理数据
-        chart.setBackgroundColor(Color.rgb(60, 65, 82));
-        chart.setWebLineWidth(1.1f);
-        chart.setWebColor(Color.LTGRAY);
-        chart.setWebColorInner(Color.GRAY);
-        chart.setWebAlpha(100);
-
-        MarkerView mv = new RadarMarkerView(this, R.layout.radar_markerview);
-        mv.setChartView(chart); // For bounds control
-        chart.setMarker(mv); // Set the marker to the chart
-
-        setRadarData();
-
-        chart.animateXY(
-                1400, 1400,
-                Easing.EasingOption.EaseInOutQuad,
-                Easing.EasingOption.EaseInOutQuad);
-
-        XAxis xAxis = chart.getXAxis();
-        //   xAxis.setTypeface(mTfLight);
-        xAxis.setTextSize(9f);
-        xAxis.setYOffset(0f);
-        xAxis.setXOffset(0f);
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return mActivities[(int) value % mActivities.length];
-            }
-        });
-        xAxis.setTextColor(Color.WHITE);
-
-        YAxis yAxis = chart.getYAxis();
-        //    yAxis.setTypeface(mTfLight);
-        yAxis.setLabelCount(7, false);
-        yAxis.setTextSize(9f);
-        yAxis.setAxisMinimum(0f);
-        yAxis.setAxisMaximum(80f);
-        yAxis.setDrawLabels(false);
-
-        Legend l = chart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        //    l.setTypeface(mTfLight);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(5f);
-        l.setTextColor(Color.WHITE);
-    }
-
-
-    public void setRadarData() {
-
-        ArrayList<RadarEntry> entries_user = new ArrayList<RadarEntry>();
-        ArrayList<RadarEntry> entries_aver = new ArrayList<RadarEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-        float mult = 20, min = 50;
-        for (int i = 0; i < 7; i++) {
-            float val2 = (float) (Math.random() * mult) + min;
-            entries_aver.add(new RadarEntry(val2));
-            entries_user.add(new RadarEntry(entry_arr[i]));
-        }
-
-
-        RadarDataSet set1 = new RadarDataSet(entries_user, "照片分析");
-        set1.setColor(Color.rgb(103, 110, 129));
-        set1.setFillColor(Color.rgb(103, 110, 129));
-        set1.setDrawFilled(true);
-        set1.setFillAlpha(180);
-        set1.setLineWidth(2f);
-        set1.setDrawHighlightCircleEnabled(true);
-        set1.setDrawHighlightIndicators(false);
-
-        RadarDataSet set2 = new RadarDataSet(entries_aver, "平均水平");
-        set2.setColor(Color.rgb(121, 162, 175));
-        set2.setFillColor(Color.rgb(121, 162, 175));
-        set2.setDrawFilled(true);
-        set2.setFillAlpha(180);
-        set2.setLineWidth(2f);
-        set2.setDrawHighlightCircleEnabled(true);
-        set2.setDrawHighlightIndicators(false);
-
-        ArrayList<IRadarDataSet> sets = new ArrayList<IRadarDataSet>();
-
-        sets.add(set2);
-        sets.add(set1);
-
-        RadarData data = new RadarData(sets);
-        //    data.setValueTypeface(mTfLight);
-        data.setValueTextSize(8f);
-        data.setDrawValues(false);
-        data.setValueTextColor(Color.WHITE);
-
-        chart.setData(data);
-        chart.invalidate();
-        Description description = new Description();
-        description.setText("转动以显示更多");
-        description.setTextColor(ContextCompat.getColor(this, R.color.white_pressed));
-        description.setTextSize(14);
-        chart.setDescription(description);
-    }
-
-
-    private void initBottomSheet() {
-        behavior = BottomSheetBehavior.from(bottomSheet);
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            }
-        });
-        infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ViewActivity.this, AnalyseActivity.class);
-                intent.putExtra("json", json);
-                startActivity(intent);
-            }
-        });
-    }
-
 
     private void displayImage() {
         File imgFile = new File(path);
@@ -320,20 +183,18 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
         if (position == 0) {
             //display bottom sheet
             generateBottomSheet();
-            WindowManager.LayoutParams windowManager = getWindow().getAttributes();
-            windowManager.dimAmount = 0.75f;
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
     }
 
 
     private void generateBottomSheet() {
-        if (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-            behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        if (fragment == null) {
+            fragment = new BottomSheetFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("json", json);
+            fragment.setArguments(bundle);
         }
-        else {
-            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
+        fragment.show(getSupportFragmentManager(), BottomSheetFragment.class.getSimpleName());
     }
 
 }
