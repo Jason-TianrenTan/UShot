@@ -392,9 +392,6 @@ public class ViewActivity extends AppCompatActivity implements BottomNavigationB
                         if (bottomTool.isSheetShowing()) {
                             bottomTool.dismissSheet();
                         }
-                        if (item.getItemId() == R.id.tools_about) {
-
-                        }
                         if (item.getItemId() == R.id.tools_multi) {
                             Matisse.from(ViewActivity.this)
                                     .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))//选择mime的类型
