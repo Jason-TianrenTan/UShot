@@ -3,6 +3,7 @@ package com.example.administrator.ushot.Views;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.administrator.ushot.Modules.DataGraph;
 import com.example.administrator.ushot.R;
+import com.example.administrator.ushot.Tools.DataProcessor;
 
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.models.BarModel;
@@ -37,7 +39,7 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private ArrayList<DataGraph> mGraphList;
 
-    public static class ArcGraphViewHolder extends RecyclerView.ViewHolder {
+    public class ArcGraphViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.rec_progressstack_score)
         ArcProgressStackView arcProgressStackView;
@@ -50,7 +52,7 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public static class BarGraphViewHolder extends RecyclerView.ViewHolder {
+    public class BarGraphViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.rec_barchart)
         BarChart barChart;
@@ -110,9 +112,9 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 int[] ftColors = new int[colors.length];
                 for (int i = 0; i < colors.length; i++)
                     ftColors[i] = Color.parseColor(colors[i]);
-                final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
+                ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
                 for (int i = 0; i < entries.length; i++)
-                    models.add(new ArcProgressStackView.Model(attributes[i], entries[i], bgColor, ftColors[i]));
+                    models.add(new ArcProgressStackView.Model(attributes[i], DataProcessor.process(entries[i]), bgColor, ftColors[i]));
 
                 viewHolder_arc.arcProgressStackView.setModels(models);
                 break;
@@ -121,8 +123,8 @@ public class GraphAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 int[] iColors = {R.color.aliceblue, R.color.aquamarine, R.color.mediumturquoise, R.color.deepskyblue,
                 R.color.dodgerblue, R.color.powderblue};
                 for (int i = 0; i < entries.length; i++)
-                    viewHolder_bar.barChart.addBar(new BarModel(attributes[i], entries[i], iColors[i]));
-
+                    viewHolder_bar.barChart.addBar(new BarModel(attributes[i], DataProcessor.process(entries[i]),
+                            ContextCompat.getColor(mContext, iColors[i])));
                 viewHolder_bar.barChart.startAnimation();
                 break;
         }

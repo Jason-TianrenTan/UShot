@@ -56,7 +56,6 @@ import devlight.io.library.ArcProgressStackView;
 public class ViewActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
 
 
-    BottomSheetBehavior behavior;
     ZLoadingDialog dialog;
     String path = null;
     float[] entry_arr = new float[7];

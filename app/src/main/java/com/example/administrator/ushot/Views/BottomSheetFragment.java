@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.administrator.ushot.Modules.DataGraph;
 import com.example.administrator.ushot.Modules.ResultBean;
 import com.example.administrator.ushot.R;
+import com.example.administrator.ushot.Tools.DataProcessor;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -35,6 +37,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import devlight.io.library.ArcProgressStackView;
 
+import static com.example.administrator.ushot.Configs.GlobalConfig.ARC_TYPE;
+import static com.example.administrator.ushot.Configs.GlobalConfig.BAR_TYPE;
+
 /**
  * Created by Administrator on 2017/10/10 0010.
  */
@@ -51,17 +56,16 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     RadarChart chart;
     @BindView(R.id.progbar_total)
     NumberProgressBar scoreBar;
-    @BindView(R.id.sheet_progressstack_score)
-    ArcProgressStackView arcProgressStackView;
-    @BindView(R.id.chart_recylcerview)
+    @BindView(R.id.chart_recyclerview)
     RecyclerView recyclerView;
     Unbinder unbinder;
 
     ArrayList<DataGraph> graphList = new ArrayList<>();
 
-    float[] bar_entries = new float[6];
-    String[] bar_attr = new String[]{"Balancing", "Light", "ColorHarmony",
-            "Object", "VividColor", "Repetition"};
+    float[] arc_entries = new float[4];
+    String[] arc_attr = new String[]{"RuleOfThirds","MotionBlur","DoF","Repetition"};
+    float[] bar_entries = new float[4];
+    String[] bar_attr = new String[]{"Light","ColorHarmony","VividColor", "Repetition"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +77,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         resultBean = gson.fromJson(json, ResultBean.class);
         initChart();
         setScore();
+        initRecyclerView();
         return view;
     }
 
@@ -85,48 +90,38 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 
 
     private void initChartData() {
-
         ResultBean.AnalysisBean analysisBean = resultBean.getAnalysis();
         //arc
-        float[] arc_arr = new float[]{Float.parseFloat(analysisBean.getBalancingElement()), Float.parseFloat(analysisBean.getSymmetry()),
-                Float.parseFloat(analysisBean.getLight()), Float.parseFloat(analysisBean.getColorHarmony()),
-                Float.parseFloat(analysisBean.getContent()), Float.parseFloat(analysisBean.getObject()),
-                Float.parseFloat(analysisBean.getVividColor())};
+        float[] arc_arr = new float[]{Float.parseFloat(analysisBean.getRuleOfThirds()), Float.parseFloat(analysisBean.getMotionBlur()),
+                Float.parseFloat(analysisBean.getDoF()), Float.parseFloat(analysisBean.getRepetition())};
         for (int i = 0; i < arc_arr.length; i++)
-            entry_arr[i] = arc_arr[i];
+            arc_entries[i] = arc_arr[i];
 
         //bar
-        float[] bar_arr = new float[]{Float.parseFloat(analysisBean.getBalancingElement()), Float.parseFloat(analysisBean.getLight()),
-                Float.parseFloat(analysisBean.getColorHarmony()), Float.parseFloat(analysisBean.getObject()),
-                Float.parseFloat(analysisBean.getVividColor()), Float.parseFloat(analysisBean.getRepetition())};
+        float[] bar_arr = new float[]{Float.parseFloat(analysisBean.getLight()),
+                Float.parseFloat(analysisBean.getColorHarmony()), Float.parseFloat(analysisBean.getVividColor()), Float.parseFloat(analysisBean.getRepetition())};
         for (int i = 0; i < bar_arr.length; i++)
             bar_entries[i] = bar_arr[i];
+
+        DataGraph arcGraph = new DataGraph(ARC_TYPE, arc_attr, arc_entries),
+                barGraph = new DataGraph(BAR_TYPE, bar_attr, bar_entries);
+        graphList.add(arcGraph);
+        graphList.add(barGraph);
     }
 
 
     private void initRecyclerView() {
+        initChartData();
         GraphAdapter adapter = new GraphAdapter(graphList);
         recyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
 
     private void setScore() {
         float score = Float.parseFloat(resultBean.getAnalysis().getScore());
         scoreBar.setProgress((int) score);
-
-        String bgColor_str = "#f5f5f5";
-        int bgColor = Color.parseColor(bgColor_str);
-        String[] colors = {"#1e90ff", "#00bfff", "#87ceeb", "#afeeee"};
-        int[] ftColors = new int[colors.length];
-        for (int i = 0; i < colors.length; i++)
-            ftColors[i] = Color.parseColor(colors[i]);
-        final ArrayList<ArcProgressStackView.Model> models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("RuleOfThirds", 25, bgColor, ftColors[0]));
-        models.add(new ArcProgressStackView.Model("MotionBlur", 50, bgColor, ftColors[1]));
-        models.add(new ArcProgressStackView.Model("DoF", 75, bgColor, ftColors[2]));
-        models.add(new ArcProgressStackView.Model("Repetition", 800, bgColor, ftColors[3]));
-
-        arcProgressStackView.setModels(models);
     }
 
 
@@ -143,15 +138,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         float[] temp = {balancing, symmetry, light, harmony, content, object, vivid};
         for (int i = 0; i < temp.length; i++) {
             float f = temp[i];
-            if (f > 0)
-                f = f * 100 + 45;
-            else
-                f = 70 + f * 20;
-            if (f <= 0)
-                f = 15;
-            if (f > 100)
-                f = 100;
-            entry_arr[i] = f;
+            entry_arr[i] = DataProcessor.process(f);
             mActivities[i] = baseStrings[i] + String.format("(%.1f)", f);
         }
     }
